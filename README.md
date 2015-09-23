@@ -64,6 +64,10 @@ Your request with a token returns a 401 response.
 
 You can revoke all registered refresh tokens by using the command `app/console auth:jwt:flush`.
 
+## Caution
+
+This project is an example, and can't work out of the box. You must add the concerned files in you sf2 project.
+
 ## TODO
 
 * Transform the controller into a security listener/provider
