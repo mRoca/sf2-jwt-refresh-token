@@ -1,0 +1,9 @@
+api_auth_get_token:
+   path: /get_token
+   defaults: { _controller: 'AuthBundle:Auth:getToken' }
+   methods: ["POST"]
+
+api_auth_refresh_token:
+   path: /refresh_token
+   defaults: { _controller: 'AuthBundle:Auth:refreshToken' }
+   methods: ["POST"]

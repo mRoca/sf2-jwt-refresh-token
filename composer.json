@@ -1,0 +1,24 @@
+{
+    "name": "mroca/sf2-jwt-refresh-token",
+    "license": "MIT",
+    "type": "project",
+    "description": "Symfony2 refresh JWT token example",
+    "authors": [
+        {
+            "name": "Michel Roca",
+            "email": "michel@mroca.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/symfony": "~2.7",
+        "lexik/jwt-authentication-bundle": "~1.1",
+        "gfreeau/get-jwt-bundle": "~1.0",
+        "doctrine/doctrine-cache-bundle": "^1.0"
+    }
+}
