@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Controller;
+namespace AppBundle\Controller;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,25 +11,41 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuthController extends Controller
 {
+    /**
+     * @Route(path="get_token", methods={"POST"})
+     *
+     * @return JsonResponse
+     */
     public function getTokenAction()
     {
         // The security layer will intercept this request
         return new JsonResponse(null, 401);
     }
 
+    /**
+     * @Route(path="refresh_token", methods={"POST"})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function refreshTokenAction(Request $request)
     {
-        $token = $request->request->get('token');
-        $refreshToken = $request->request->get('refresh_token');
+        $refreshToken = $request->request->get('refresh_token', null);
+        $token = $request->request->get('token', null);
 
         if (null === $refreshToken) {
             throw new BadRequestHttpException('You must provide the token and the refresh_token parameters.');
         }
 
-        $refreshTokenManager = $this->get('auth.services.jwt_refresh_manager');
+        $refreshTokenManager = $this->get('app.services.jwt_refresh_manager');
 
-        if (false === $refreshTokenPayload = $refreshTokenManager->verify($token, $refreshToken)) {
-            throw new AccessDeniedHttpException('The refresh token is invalid and has been revoked.');
+        try {
+            $refreshTokenManager->verify($token, $refreshToken);
+        } catch (\InvalidArgumentException $e) {
+            throw new AccessDeniedHttpException('The refresh token is invalid and has been revoked.', $e);
+        } finally {
+            $refreshTokenManager->delete($token);
         }
 
         $authToken = new JWTUserToken();

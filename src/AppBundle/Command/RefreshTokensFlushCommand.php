@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Command;
+namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +14,7 @@ class RefreshTokensFlushCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('auth:jwt:flush')
+            ->setName('jwt:refresh-tokens-flush')
             ->setDescription('Revoke all refresh tokens');
     }
 
@@ -23,14 +23,12 @@ class RefreshTokensFlushCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->getContainer()->get('auth.services.jwt_refresh_manager')->flushAll()) {
+        if (!$this->getContainer()->get('services.jwt_refresh_manager')->flushAll()) {
             $output->writeln('<error>Unable to rewoke refresh tokens.</error>');
 
             return -1;
         }
 
-        $output->writeln('<success>All refresh tokens are now revoked.</success>');
-
-        return;
+        $output->writeln('<info>All refresh tokens are now revoked.</info>');
     }
 }

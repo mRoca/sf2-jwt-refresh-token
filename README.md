@@ -1,10 +1,10 @@
-# Symfony2 refresh JWT token example
+# Symfony - Refresh JWT token example
 
 ## About
 
 This example use the [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle)
 and the [GfreeauGetJWTBundle](https://github.com/gfreeau/GfreeauGetJWTBundle) bundles,
-and allow to add a `/api/refresh_token` route in order to ... refresh a jwt token.
+and allow to add a `/refresh_token` route in order to ... refresh a jwt token.
 
 ## How it works ?
 
@@ -14,14 +14,17 @@ Each refresh token is signed and cached on the server. His default validity peri
 ## Dependencies
 
 * [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle)
-* [GfreeauGetJWTBundle](https://github.com/gfreeau/GfreeauGetJWTBundle)
 * [DoctrineCacheBundle](https://github.com/doctrine/DoctrineCacheBundle)
+
+### RSA keys
+
+You must generate your public & private keys to generate secure tokens. You can use the `bin/generate_jwt_keys.sh` in order to do it.
 
 ## Wokflow
 
 ### Step 1 : Get the jwt token with a refresh_token_key parameter
 
-> curl -X POST http://api.thom.docker/get_token -d username=user -d password=password -refresh_token_key=test
+> curl -X POST http://foo.bar.docker/get_token -d username=user -d password=password -refresh_token_key=test
 
 ```json
 {
@@ -51,7 +54,7 @@ Your request with a token returns a 401 response.
 
 ### Step 4 : use the refresh token to get a new token
 
-> curl -X POST http://api.thom.docker/refresh_token -d token=eyJhbGciOiJS... -d refresh_token=eyJhbGc...
+> curl -X POST http://foo.bar.docker/refresh_token -d token=eyJhbGciOiJS... -d refresh_token=eyJhbGc...
 
 ```json
 {
@@ -62,12 +65,8 @@ Your request with a token returns a 401 response.
 
 ## Command
 
-You can revoke all registered refresh tokens by using the command `app/console auth:jwt:flush`.
+You can revoke all registered refresh tokens by using the command `bin/console jwt:refresh-tokens-flus`.
 
 ## Caution
 
-This project is an example, and can't work out of the box. You must add the concerned files in you sf2 project.
-
-## TODO
-
-* Transform the controller into a security listener/provider
+This project is an example, and can't work out of the box. You must add the concerned files in you sf project.

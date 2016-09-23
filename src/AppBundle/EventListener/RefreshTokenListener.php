@@ -1,19 +1,23 @@
 <?php
 
-namespace AuthBundle\EventListener;
+namespace AppBundle\EventListener;
 
-use AuthBundle\Services\JwtRefreshManagerInterface;
+use AppBundle\Services\JwtRefreshManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class RefreshTokenListener
 {
-    /** @var JwtRefreshManagerInterface */
+    /** @var JwtRefreshManager */
     private $jwtRefreshManager;
 
-    public function __construct(JwtRefreshManagerInterface $jwtRefreshManager)
+    /** @var RequestStack */
+    private $requestStack;
+
+    public function __construct(JwtRefreshManager $jwtRefreshManager, RequestStack $requestStack)
     {
         $this->jwtRefreshManager = $jwtRefreshManager;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -23,9 +27,9 @@ class RefreshTokenListener
     {
         $data = $event->getData();
         $user = $event->getUser();
-        $request = $event->getRequest();
 
-        $refreshTokenKey = $request->get('refresh_token_key');
+        $refreshTokenKey = $this->requestStack->getCurrentRequest()->request->get('refresh_token_key', null);
+
         if (!$user instanceof UserInterface || !$refreshTokenKey) {
             return;
         }

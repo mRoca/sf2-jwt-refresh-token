@@ -24,16 +24,9 @@ security:
         gettoken:
             pattern:  ^/get_token$
             stateless: true
-            gfreeau_get_jwt:
-                # this is the default config
-                username_parameter: username
-                password_parameter: password
-                post_only: true
-                authentication_provider: security.authentication.provider.dao
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            get_jwt: ~
 
-        api:
+        app:
             pattern:   ^/
             stateless: true
             lexik_jwt:
@@ -45,4 +38,4 @@ security:
                     name:    bearer
 
     access_control:
-        - { path: ^/,      roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

@@ -1,0 +1,28 @@
+services:
+    app.event.refresh_token_listener:
+        class: AppBundle\EventListener\RefreshTokenListener
+        arguments: [ "@app.services.jwt_refresh_manager", "@request_stack" ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
+    app.event.user_data_listener:
+        class: AppBundle\EventListener\UserDataListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
+    app.services.jwt_refresh_manager:
+        class: AppBundle\Services\JwtRefreshManager
+        arguments: [ "@lexik_jwt_authentication.encoder", "@doctrine_cache.providers.jwt_refresh_token" ]
+
+    app.security.authentication.listener:
+        class: AppBundle\Security\Firewall\GetJWTListener
+        arguments:
+            - "@security.token_storage"
+            - "@security.authentication.manager"
+            - null
+            - "@lexik_jwt_authentication.handler.authentication_success"
+            - "@lexik_jwt_authentication.handler.authentication_failure"
+            - null
+            - "@?logger"
+        tags:
+            - { name: monolog.logger, channel: security }
